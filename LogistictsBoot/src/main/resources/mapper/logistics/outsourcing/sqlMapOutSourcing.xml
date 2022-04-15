@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.estimulo.logistics.outsourcing.mapper.OutSourcingDAO">
+
+	<resultMap type="OutsourcingTO" id="OutsourcingResult">
+		<result property="outsourcingNo" column="OUTSOURCING_NO" />
+		<result property="materialStatus" column="MATERIAL_STATUS" />
+		<result property="customerCode" column="CUSTOMER_CODE" />
+		<result property="completeDate" column="COMPLETE_DATE" />
+		<result property="instructDate" column="INSTRUCT_DATE" />
+		<result property="itemCode" column="ITEM_CODE" />
+		<result property="itemName" column="ITEM_NAME" />
+		<result property="instructAmount" column="INSTRUCTION_AMOUNT" />
+		<result property="completeStatus" column="COMPLETE_SATAUS" />
+		<result property="checkStatus" column="CHECK_STATUS" />
+		<result property="unitPrice" column="UNIT_STATUS" />
+		<result property="totalPrice" column="TOTAL_PRICE" />
+		<result property="outsourcingDate" column="OUTSOURCING_DATE" />
+		<result property="customerName" column="CUSTOMER_NAME" />
+	</resultMap>
+
+	<select id="selectOutSourcingList" resultMap="OutsourcingResult"
+		parameterType="map">
+		SELECT OS.*
+		,I.ITEM_NAME
+		,C.CUSTOMER_NAME
+		FROM OUTSOURCING OS, ITEM I, CUSTOMER C
+		WHERE OS.ITEM_CODE=I.ITEM_CODE
+		AND OS.CUSTOMER_CODE=C.CUSTOMER_CODE
+		AND to_char(OUTSOURCING_DATE,'YYYY-MM-DD') BETWEEN #{fromDate} AND
+		#{toDate}
+		<if test='customerCode!="null" or customerCode!=""'>
+			AND OS.CUSTOMER_CODE=#{customerCode}
+			<if test='materialStatus!="null" or materialStatus!=""'>
+				AND OS.MATERIAL_STATUS=#{materialStatus}
+			</if>
+		</if>
+		<if test='itemCode!="null" or materialStatus!=""'>
+			AND I.ITEM_CODE=#{itemCode}
+		</if>
+	</select>
+
+
+</mapper>
+   

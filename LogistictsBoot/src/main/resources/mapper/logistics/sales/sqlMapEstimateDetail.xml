@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+	<mapper namespace="com.estimulo.logistics.sales.mapper.EstimateDetailDAO">
+
+	<resultMap id="estimateDetailResult" type="estimateDetailTO">
+		<result property="description" column="DESCRIPTION" />
+		<result property="dueDateOfEstimate" column="DUE_DATE_OF_ESTIMATE" />
+		<result property="estimateAmount" column="ESTIMATE_AMOUNT" />
+		<result property="estimateDetailNo" column="ESTIMATE_DETAIL_NO" />
+		<result property="estimateNo" column="ESTIMATE_NO" />
+		<result property="itemCode" column="ITEM_CODE" />
+		<result property="itemName" column="ITEM_NAME" />
+		<result property="sumPriceOfEstimate" column="SUM_PRICE_OF_ESTIMATE" />
+		<result property="unitOfEstimate" column="UNIT_OF_ESTIMATE" />
+		<result property="unitPriceOfEstimate" column="UNIT_PRICE_OF_ESTIMATE" />
+	</resultMap>
+
+	<select id="selectEstimateDetailList" parameterType="String"
+		resultMap="estimateDetailResult">
+		SELECT * 
+		FROM ESTIMATE_DETAIL 
+		WHERE ESTIMATE_NO = #{estimateNo}
+	</select>
+	<select id="selectEstimateDetailCount" parameterType="String"
+		resultType="Integer">
+		SELECT ESTIMATE_DETAIL_NO 
+		FROM ESTIMATE_DETAIL 
+		WHERE ESTIMATE_NO = #{estimateNo}
+	</select>
+	<!--반복문 등으로 시퀀스를 불러 올 경우 캐시가 남아 전부 같은값을 리턴하게 됨
+		useCashe="false"와  flushCache="true"를 해서 캐시를 모두 날려 주어야한다. -->
+	<select id="selectEstimateDetailSeq" parameterType="String" resultType="Integer" useCache="false" flushCache="true">
+		SELECT EST_DETAIL_SEQ.NEXTVAL FROM DUAL
+	</select>
+	
+	<insert id="insertEstimateDetail"
+		parameterType="EstimateDetailTO">
+		INSERT INTO ESTIMATE_DETAIL ( ESTIMATE_DETAIL_NO,
+									  ESTIMATE_NO, 
+									  ITEM_CODE,
+									  ITEM_NAME,
+									  UNIT_OF_ESTIMATE,
+									  DUE_DATE_OF_ESTIMATE,
+									  ESTIMATE_AMOUNT,
+									  UNIT_PRICE_OF_ESTIMATE,
+									  SUM_PRICE_OF_ESTIMATE,
+									  DESCRIPTION
+									 )
+							VALUES  ( #{estimateDetailNo} , 
+									  #{estimateNo} , 
+									  #{itemCode} ,
+									  #{itemName} , 
+									  #{unitOfEstimate} , 
+									  #{dueDateOfEstimate} , 
+									  #{estimateAmount} , 
+									  #{unitPriceOfEstimate} , 
+									  #{sumPriceOfEstimate} , 
+									  #{description}
+									  )
+	</insert>
+
+	<update id="updateEstimateDetail" parameterType="EstimateDetailTO">
+		UPDATE ESTIMATE_DETAIL SET 
+					ITEM_CODE = #{itemCode} , 
+					ITEM_NAME = #{itemName} , 
+					UNIT_OF_ESTIMATE = #{unitOfEstimate} , 
+					DUE_DATE_OF_ESTIMATE = #{dueDateOfEstimate} , 
+					ESTIMATE_AMOUNT = #{estimateAmount} , 
+					UNIT_PRICE_OF_ESTIMATE = #{unitPriceOfEstimate} , 
+					SUM_PRICE_OF_ESTIMATE = #{sumPriceOfEstimate} , 
+					DESCRIPTION = #{description} 
+			WHERE ESTIMATE_DETAIL_NO = #{estimateDetailNo}
+	</update>
+
+	<delete id="deleteEstimateDetail" parameterType="String">
+		DELETE FROM ESTIMATE_DETAIL WHERE ESTIMATE_DETAIL_NO = #{estimateDetailNo}
+	</delete>
+
+	<insert id="initDetailSeq" parameterType="String">
+		<![CDATA[
+			{call P_SEQUENCE_INIT(#{EST_DETAIL_SEQ.CURRVAL})}
+		]]>
+	</insert>
+
+	<update id="reArrangeEstimateDetail" parameterType="EstimateDetailTO">
+		UPDATE ESTIMATE_DETAIL
+			SET	ESTIMATE_DETAIL_NO = replace(ESTIMATE_DETAIL_NO,substr(ESTIMATE_DETAIL_NO,instr(ESTIMATE_DETAIL_NO,'-')+1),#{newSeq})
+		WHERE ESTIMATE_DETAIL_NO=#{estimateDetailNo}
+	</update>
+
+</mapper>
