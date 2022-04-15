@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <display-name>Logistic</display-name>
+  <welcome-file-list>
+    <welcome-file>/WEB-INF/jsp/loginForm.jsp</welcome-file>
+  </welcome-file-list>
+
+    <filter>
+        <filter-name>sitemesh</filter-name>
+        <filter-class>com.opensymphony.sitemesh.webapp.SiteMeshFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>sitemesh</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+  <servlet>
+    <servlet-name>main</servlet-name>
+    <servlet-class>com.estimulo.system.common.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>/WEB-INF/contextConfigLocation/properties/main.properties</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>main</servlet-name>
+    <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>main</servlet-name>
+    <url-pattern>*.html</url-pattern>
+  </servlet-mapping>
+  
+  <!-- 자식 컨테이너 -->
+  <servlet>
+    <servlet-name>logisticsInfo</servlet-name>
+    <servlet-class>com.estimulo.system.common.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>
+      /WEB-INF/contextConfigLocation/properties/base.properties,/WEB-INF/contextConfigLocation/properties/logisticsInfo.properties
+      </param-value>
+    </init-param>
+    <load-on-startup>2</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>logisticsInfo</servlet-name>
+    <url-pattern>/base/*</url-pattern>
+  </servlet-mapping>   
+  <servlet-mapping>
+    <servlet-name>logisticsInfo</servlet-name>
+    <url-pattern>/logisticsInfo/*</url-pattern>
+  </servlet-mapping>   
+  
+  <servlet>
+      <servlet-name>personnel</servlet-name>
+    <servlet-class>com.estimulo.system.common.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>/WEB-INF/contextConfigLocation/properties/hr.properties</param-value>
+    </init-param>
+    <load-on-startup>3</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>personnel</servlet-name>
+    <url-pattern>/hr/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>basicInfo</servlet-name>
+    <servlet-class>com.estimulo.system.common.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>/WEB-INF/contextConfigLocation/properties/basicInfo.properties</param-value>
+    </init-param>
+    <load-on-startup>4</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>basicInfo</servlet-name>
+    <url-pattern>/basicInfo/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>sales</servlet-name>
+    <servlet-class>com.estimulo.system.common.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>/WEB-INF/contextConfigLocation/properties/sales.properties</param-value>
+    </init-param>
+    <load-on-startup>5</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>sales</servlet-name>
+    <url-pattern>/sales/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+      <servlet-name>material</servlet-name>
+    <servlet-class>com.estimulo.system.common.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>/WEB-INF/contextConfigLocation/properties/material.properties</param-value>
+    </init-param>
+    <load-on-startup>6</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>material</servlet-name>
+    <url-pattern>/material/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>production</servlet-name>
+    <servlet-class>com.estimulo.system.common.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>/WEB-INF/contextConfigLocation/properties/production.properties</param-value>
+    </init-param>
+    <load-on-startup>7</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>production</servlet-name>
+    <url-pattern>/production/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>authority</servlet-name>
+    <servlet-class>com.estimulo.system.common.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>/WEB-INF/contextConfigLocation/properties/authorityManager.properties</param-value>
+    </init-param>
+    <load-on-startup>8</load-on-startup>
+  </servlet>  
+  <servlet-mapping>
+    <servlet-name>authority</servlet-name>
+    <url-pattern>/authorityManager/*</url-pattern>
+  </servlet-mapping>
+
+	<servlet>
+    <servlet-name>outsourcing</servlet-name>
+    <servlet-class>com.estimulo.system.common.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>/WEB-INF/contextConfigLocation/properties/outsourcing.properties</param-value>
+    </init-param>
+    <load-on-startup>9</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>outsourcing</servlet-name>
+    <url-pattern>/outsourcing/*</url-pattern>
+  </servlet-mapping>
+
+  <context-param>
+    <param-name>urlmappingFile</param-name>
+    <param-value>/WEB-INF/contextConfigLocation/properties/urlmapping.properties</param-value>
+  </context-param>
+  
+  <context-param>
+    <param-name>pathFile</param-name>
+    <param-value>/WEB-INF/contextConfigLocation/properties/path.properties</param-value>
+  </context-param>
+  
+  <listener>
+    <listener-class>com.estimulo.system.base.controller.SessionController</listener-class>
+  </listener>
+  <session-config>
+        <session-timeout>3600</session-timeout> 
+    </session-config>
+</web-app>

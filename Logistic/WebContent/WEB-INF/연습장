@@ -1,0 +1,306 @@
+public void registEmpImg(String empCode, String imgExtend) {
+      if (logger.isDebugEnabled()) {
+         logger.debug(" registEmpImg 시작 ");
+      }
+
+      dataSourceTransactionManager.beginTransaction();
+      try {
+         baseApplicationService.registEmpImg(empCode, imgExtend);
+         dataSourceTransactionManager.commitTransaction();
+      } catch (DataAccessException e) {
+         dataSourceTransactionManager.rollbackTransaction();
+         logger.fatal(e.getMessage());
+         throw e;
+      } finally {
+         dataSourceTransactionManager.closeConnection();
+      }
+
+      if (logger.isDebugEnabled()) {
+         logger.debug(" registEmpImg 종료 ");
+      }
+   }
+   
+   
+   
+   public void registEmpImg(String empCode, String imgExtend) {
+      if (logger.isDebugEnabled()) {
+         logger.debug(" registEmpImg 시작 ");
+      }
+           System.out.println("노가다1@@@@@@@@@@@@@@@@@@@@@@@");
+      EmpTO emp = empApplicationService.findAllEmployeeInfo(empCode);
+      if (emp == null) {
+         System.out.println("안들가겟지@@@@@@@@@@@@@@@@@@@@@@@");
+         emp = new EmpTO();
+         emp.setEmpCode(empCode);
+         emp.setStatus("insert");
+      } else {
+         System.out.println("노가다2들가겠지@@@@@@@@@@@@@@@@@@@@@@@");
+         emp.setStatus("update");
+      }
+      
+      emp.setImgExtend(imgExtend);
+      empApplicationService.modifyEmployee(emp);
+
+      if (logger.isDebugEnabled()) {
+         logger.debug(" registEmpImg 종료 ");
+      }
+   }
+   
+   
+   
+   
+   
+   public EmpTO findAllEmployeeInfo(String empCode) {
+      if (logger.isDebugEnabled()) {
+         logger.debug(" findAllEmployeeInfo 시작 ");
+      }
+      System.out.println("노가다1-1@@@@@@@@@@@@@@@@@@@@@@@");
+      EmpTO empTO = empDAO.selectEmployee(empCode);
+      
+      ArrayList<WorkInfoTO> workInfoList = workInfoDAO.selectWorkList(empCode);
+      ArrayList<CareerInfoTO> careerInfoList = careerInfoDAO.selectCareerList(empCode);
+      ArrayList<EducationInfoTO> educationInfoList = educationInfoDAO.selectEducationList(empCode);
+      ArrayList<LicenseInfoTO> licenseInfoList = licenseInfoDAO.selectLicenseList(empCode);
+      ArrayList<FamilyInfoTO> familyInfoList = familyInfoDAO.selectFamilyList(empCode);
+      empTO.setWorkInfoList(workInfoList);
+      empTO.setCareerInfoList(careerInfoList);
+      empTO.setEducationInfoList(educationInfoList);
+      empTO.setLicenseInfoList(licenseInfoList);
+      empTO.setFamilyInfoList(familyInfoList);
+      
+      if (logger.isDebugEnabled()) {
+         logger.debug(" findAllEmployeeInfo 종료 ");
+      }
+      return empTO;
+   }
+   
+   
+   
+   
+   public EmpTO selectEmployee(String empCode) {
+      System.out.println("노가다1-2@@@@@@@@@@@@@@@@@@@@@@@");
+      if (logger.isDebugEnabled()) {
+         logger.debug(" selectEmployee 시작 ");
+      }
+
+      Connection con = null;
+      PreparedStatement pstmt = null;
+      ResultSet rs = null;
+      try {
+         con = dataSourceTransactionManager.getConnection();
+
+         StringBuffer query = new StringBuffer();
+         query.append("SELECT E.EMP_CODE, E.EMP_NAME, TO_CHAR(E.BIRTHDATE,'YYYY/MM/DD') BIRTHDATE");
+         query.append(", E.GENDER, E.MOBILE_NUMBER, E.ADDRESS");
+         query.append(", E.DETAIL_ADDRESS, E.POST_NUMBER, E.EMAIL, E.ID, E.PW");
+         query.append(", E.LAST_SCHOOL, E.IMG_EXTEND, PD.DEPT_NAME, PD.POSITION ");
+         query.append("FROM EMP E, (SELECT * FROM POSITION P, DEPT D) PD ");
+         query.append("WHERE 1=1 ");
+         query.append("AND E.POSITION_CODE = PD.POSITION_CODE(+) ");
+         query.append("AND E.DEPT_CODE = PD.DEPT_CODE(+) ");
+         query.append("AND E.EMP_CODE = ? ");
+         query.append("ORDER BY E.EMP_CODE");
+                  
+         /* 위랑 같은 결과, 다른 조인방식 사용
+          * query.
+          * append("select emp_code,emp_name,TO_CHAR(birthdate,'YYYY/MM/DD') birthdate");
+          * query.
+          * append(", gender, mobile_number,address,detail_address,post_number,email,last_school,img_extend"
+          * ); query.append(",d.dept_name,p.POSITION");
+          * query.append("from emp, DEPT d, POSITION p");
+          * query.append("where emp.dept_code=d.dept_code(+)");
+          * query.append("and emp.POSITION_CODE=p.POSITION_CODE(+)");
+          * query.append("AND emp.emp_code=?"); query.append("ORDER BY E.EMP_CODE");
+          */
+         
+         pstmt = con.prepareStatement(query.toString());
+         pstmt.setString(1, empCode);
+         rs = pstmt.executeQuery();
+         EmpTO emp = new EmpTO();
+         if (rs.next()) {
+            emp.setEmpName(rs.getString("emp_name"));
+            emp.setDeptName(rs.getString("dept_name"));
+            emp.setId(rs.getString("id"));
+            emp.setPw(rs.getString("pw"));
+            emp.setPosition(rs.getString("position"));
+            emp.setGender(rs.getString("gender"));
+            emp.setMobileNumber(rs.getString("mobile_number"));
+            emp.setEmpCode(rs.getString("emp_code"));
+            emp.setAddress(rs.getString("address"));
+            emp.setDetailAddress(rs.getString("detail_address"));
+            emp.setBirthdate(rs.getString("birthdate"));
+            emp.setPostNumber(rs.getString("post_number"));
+            emp.setImgExtend(rs.getString("img_extend"));
+            emp.setLastSchool(rs.getString("last_school"));
+            emp.setEmail(rs.getString("email"));
+         }
+
+         if (logger.isDebugEnabled()) {
+            logger.debug(" selectEmployee 종료 ");
+         }
+         return emp;
+      } catch (Exception sqle) {
+         logger.fatal(sqle.getMessage());
+         throw new DataAccessException(sqle.getMessage());
+      } finally {
+         dataSourceTransactionManager.close(pstmt, rs);
+      }
+   }
+   
+   
+   package kr.co.yooooon.base.controller;
+
+import java.io.OutputStream;
+import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import kr.co.yooooon.base.sf.BaseServiceFacade;
+import kr.co.yooooon.base.sf.BaseServiceFacadeImpl;
+import kr.co.yooooon.base.to.ReportSalaryTO;
+import kr.co.yooooon.base.to.ReportTO;
+import kr.co.yooooon.common.servlet.ModelAndView;
+import kr.co.yooooon.common.servlet.mvc.MultiActionController;
+import kr.co.yooooon.common.transaction.DataSourceTransactionManager;
+import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.JREmptyDataSource;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+
+public class EmpReportController extends MultiActionController {
+   private ModelAndView modelAndView;
+   private DataSourceTransactionManager dataSourceTransactionManager = DataSourceTransactionManager.getInstance();  //connection 객체를 얻기위해 사용
+   private BaseServiceFacade baseServiceFacade = BaseServiceFacadeImpl.getInstance();
+    
+   public ModelAndView requestEmployment(HttpServletRequest request, HttpServletResponse response) {  //재직증명서 신청
+     
+      String empCode = request.getParameter("empCode"); //해쉬맵 생성, URL에서 보낸 파라미터값을 맵에 담는다
+      String usage = request.getParameter("usage");
+      String requestDay=request.getParameter("requestDay");
+      String useDay=request.getParameter("useDay");
+      
+      response.setContentType("application/json; charset=UTF-8");
+      response.setCharacterEncoding("utf-8");
+    
+     
+      try {
+         ReportTO to = baseServiceFacade.viewReport(empCode);
+         Map<String, Object> map = new HashMap<String, Object>();
+      
+         JasperReport jasperReport = JasperCompileManager.compileReport((request.getServletContext().getRealPath("/report/employment.jrxml")));  // 절대경로 얻어온다  c:~~webcontent 밑에 
+         //JasperCompileManager = 네트워크전송을위한보고서디자인객체를얻기위한클래스 // 보고서 컴파일 기능을 제공
+        
+         //JRDataSource datasource = new JREmptyDataSource(); 
+          // 이놈은 가상 레코드로 데이터소스를 시뮬레이트하는 클래스 < 즉 이놈으로 돌리면 priview에서는 잘나오지만 실제 웹상에서는 conncetion 객체로 하는게 아니라서 데이터베이스접근 x 그래서 계속 null 나왔음
+         // 아래 월급은 다 파라미터로 받아와서 입력이지만 재직증명은 파라미터 말고 자체적으로 커리를 돌려서 넣는놈이 있기때문에 connceton객체필요
+         Connection con = dataSourceTransactionManager.getConnection();
+         // 내부DataSourceTransactionManager.java에 지정된 수의 가상 레코드로 데이터소스를 시뮬레이트하는 클래스 
+         
+       // map.put( "name", to.getEmpName());
+//             map.put( "hiredate", to.getHiredate());
+//             map.put( "occupation", to.getOccupation());
+//             map.put( "employmentType", to.getEmploymentType());
+//             map.put( "position", to.getPosition());
+//             map.put( "address", to.getAddress());
+//             map.put( "detailAddress", to.getDetailAddress());
+//             map.put( "deptName", to.getDeptName());
+             map.put( "usage", usage);
+             map.put( "date", requestDay);
+             map.put( "end", useDay);
+             map.put( "empCode",empCode);  // 이놈이 없으면 리포터의 파라미터로 부분에 아무것도 안들어가서 값이 안나온다.
+          OutputStream outputStream = null;   //파일 보내주기
+          for (String key: map.keySet()) { 
+              System.out.println(key);
+              System.out.println(map.get(key)); 
+           }
+          
+  
+      JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, con);  //맵에 담았던 값과 제스퍼 리포트를 인자값에 넣어서 JasperPrint를 실행한다. !! 이게 중요 map에 
+     
+      //JasperFillManager= 보고서디자인에 데이터를 채우는 클래스 
+       //fillReport (jasperReport형식, Map형식, dataSource형식)   
+      
+        outputStream = response.getOutputStream();   // 응답되어진것에대한적합한 OutputStream을 반환해줌
+           
+
+        response.setContentType("application/pdf"); //PDF형식으로 변환! 마인타입
+        JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
+        //JasperExportManager = 생성된보고서를 pdf,html,xml 형식으로 내보내는 class
+         // 첫번째 매개변수로 생성 된 보고서를 pdf 형식으로 두번째 매개변수로 지정된 출력스트림에 사용함 
+        outputStream.flush();
+      } catch (Exception e) {
+         dataSourceTransactionManager.rollbackTransaction();
+          // 다쓴 con객체를 돌려준다
+           logger.fatal(e.getMessage());
+      } finally {
+         dataSourceTransactionManager.closeConnection();
+      }
+      return modelAndView; 
+   }
+   
+   
+   
+   
+   public ModelAndView requestMonthSalary(HttpServletRequest request, HttpServletResponse response) { //월급여 보고서 신청
+      HashMap<String, Object> parameters = new HashMap<>(); //해쉬맵 생성
+      parameters.put("empCode", request.getParameter("empCode")); // URL에서 보낸 파라미터값을 맵에 담는다.
+      parameters.put("applyMonth", request.getParameter("applyMonth"));
+      
+      response.setContentType("application/json; charset=UTF-8");
+      response.setCharacterEncoding("utf-8"); 
+      
+      String empCode = request.getParameter("empCode");
+      String applyMonth = request.getParameter("applyMonth");
+      
+      try {
+        ReportSalaryTO to = baseServiceFacade.viewSalaryReport(empCode,applyMonth);
+        Map<String, Object> map = new HashMap<String, Object>();
+         
+        JasperReport jasperReport = JasperCompileManager.compileReport((request.getServletContext().getRealPath("/report/SalaryStatement.jrxml")));
+        
+      
+        JRDataSource da=new JREmptyDataSource();
+        
+         map.put( "empName", to.getEmpName());
+         map.put( "position", to.getPosition());
+         map.put( "deptName", to.getDeptName());
+         map.put( "hiredate", to.getHiredate());
+         map.put( "applyYearMonth", to.getApplyYearMonth());
+         map.put( "totalExtSal", to.getTotalExtSal());
+         map.put( "totalDeduction", to.getTotalDeduction());
+         map.put( "totalPayment", to.getTotalPayment());
+         map.put( "realSalary", to.getRealSalary());
+         map.put( "salary", to.getSalary());
+         map.put( "cost", to.getCost());
+         map.put( "healthIns", to.getHealthIns());
+         map.put( "goyongIns", to.getGoyongIns());
+         map.put( "janggiIns", to.getJanggiIns());
+         map.put( "gukmin", to.getGukmin());  //안넣으면 국민연금 부분 null로 나옴
+         // 보고서에 null로 나오면 map의 키값 확인하기
+         OutputStream outputStream = null;
+         // 결과가 올바로 넘어 왔는지 출력으로 확인
+         for (String key: map.keySet()) { 
+            System.out.println(key);
+            System.out.println(map.get(key)); 
+         }
+          JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, da);    //맵에 담았던 값과 제스퍼 리포트를 인자값에 넣어서 JasperPrint를 실행한다.
+
+           outputStream = response.getOutputStream();      // 응답되어진것에대한적합한 OutputStream을 반환해줌
+           response.setContentType("application/pdf");       //PDF형식으로 변환!
+           JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
+           //보고서가 안나왔던이유는 map에 담아서 보내더라도 보고서 database and query안에 query 문이 없으면안된다
+           outputStream.flush();
+         
+      } catch (Exception e) {
+        
+         logger.fatal(e.getMessage());
+      }
+      return modelAndView;
+   }
+}
+   

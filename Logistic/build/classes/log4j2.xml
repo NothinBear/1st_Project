@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="DEBUG">
+
+    <!-- Appender, Layout 설정 -->
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout/>
+        </Console>
+        <File name="LogToFile" fileName="logs/app.log">
+            <PatternLayout>
+                <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+            </PatternLayout>
+        </File>
+        <SMTP name="SmtpAppender"
+              to="a45248435@gmail.com"
+              from="estimulo65k@gmail.com"
+              smtpHost="smtp.gmail.com"
+              smtpPort="465"
+              bufferSize="4"
+              smtpUsername="estimulo65k@gmail.com"
+              smtpPassword="estimulo1234"
+              smtpProtocol="smtps"
+              smtpDebug="true"
+              ignoreExceptions="false"
+              subject="Test"/>
+    </Appenders>
+
+    <!-- Logger 설정 -->
+    <Loggers>
+        <Root level="DEBUG">
+            <AppenderRef ref="console"/>
+            <AppenderRef ref="LogToFile"/>
+            <AppenderRef ref="SmtpAppender" level="ERROR"/>
+        </Root>
+    </Loggers>
+</Configuration>
