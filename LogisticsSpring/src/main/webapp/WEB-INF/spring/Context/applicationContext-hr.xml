@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd">
+	
+	<!-- dao -->
+	<!-- applicationService -->
+	<!-- serviceFacade -->
+	<bean id="employeeBasicDAO"
+		class="com.estimulo.hr.affair.dao.EmployeeBasicDAOImpl"
+		parent="iBatisDaoSupport"/>
+	<bean id="employeeDetailDAO"
+		class="com.estimulo.hr.affair.dao.EmployeeDetailDAOImpl"
+		parent="iBatisDaoSupport"/>
+	<bean id="employeeSecretDAO"
+		class="com.estimulo.hr.affair.dao.EmployeeSecretDAOImpl"
+		parent="iBatisDaoSupport"/>
+	<bean id="emplSearchingDAO"
+		class="com.estimulo.hr.affair.dao.EmpSearchingDAOImpl"
+		parent="iBatisDaoSupport"/>
+	
+	<bean id="empApplicationService"
+		class="com.estimulo.hr.affair.applicationService.EmpApplicationServiceImpl"
+		p:employeeBasicDAO-ref="employeeBasicDAO"
+		p:employeeDetailDAO-ref="employeeDetailDAO"
+		p:employeeSecretDAO-ref="employeeSecretDAO"
+		p:emplSearchingDAO-ref="emplSearchingDAO"
+		p:codeDetailDAO-ref="codeDetailDAO"/>
+	
+	<bean id="affairServiceFacade"
+		class="com.estimulo.hr.affair.serviceFacade.AffairServiceFacadeImpl"
+		p:empApplicationService-ref="empApplicationService"/>
+		
+</beans>

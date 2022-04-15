@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+	
+	<bean id="addressDAO"
+		class="com.estimulo.system.base.dao.AddressDAOImpl"
+		parent="iBatisDaoSupport"/>
+	<bean id="codeDAO"
+		class="com.estimulo.system.base.dao.CodeDAOImpl"
+		parent="iBatisDaoSupport"/>
+	<bean id="codeDetailDAO"
+		class="com.estimulo.system.base.dao.CodeDetailDAOImpl"
+		parent="iBatisDaoSupport"/>
+	<bean id="reportDAO"
+		class = "com.estimulo.system.base.dao.ReportDAOImpl"
+		parent="iBatisDaoSupport"/>
+		
+	<bean id="codeApplicationService"
+		class="com.estimulo.system.base.applicationService.CodeApplicationServiceImpl" 
+		p:codeDAO-ref="codeDAO"
+		p:codeDetailDAO-ref="codeDetailDAO"/>
+	<bean id="addressApplicationService"
+		class="com.estimulo.system.base.applicationService.AddressApplicationServiceImpl" 
+		p:addressDAO-ref="addressDAO"/>
+	<bean id="reportApplicationService"
+		class="com.estimulo.system.base.applicationService.ReportApplicationServiceImpl" 
+		p:reportDAO-ref="reportDAO"/>
+		
+	<bean id="baseServiceFacade"
+		class="com.estimulo.system.base.serviceFacade.BaseServiceFacadeImpl"
+		p:codeApplicationService-ref="codeApplicationService"
+		p:addressApplicationService-ref="addressApplicationService"
+		p:reportApplicationService-ref="reportApplicationService"/>
+</beans>

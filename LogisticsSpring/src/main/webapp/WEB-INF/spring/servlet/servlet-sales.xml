@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/sales/" />
+		<property name="suffix" value=".jsp" />
+		<property name="contentType" value="text/html; charset=UTF-8"/>
+	</bean>
+
+	<bean id="simpleUrlHandlerMapping"
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="order" value="1" />
+		<property name="alwaysUseFullPath" value="false" />
+		<property name="interceptors"> 
+			<list> 
+				<ref bean="loggerInterceptor"/> 
+			</list> 
+		</property>
+		<property name="mappings">
+			<value>
+				/estimateInfo.html=urlFilenameViewController
+				/estimateRegister.html=urlFilenameViewController
+				/contractInfo.html=urlFilenameViewController
+				/contractRegister.html=urlFilenameViewController
+				/deliveryInfo.html=urlFilenameViewController
+				/salesPlanInfo.html=urlFilenameViewController
+				/searchEstimate.do=estimateController
+				/addNewEstimate.do=estimateController
+				/batchEstimateDetailListProcess.do=estimateController
+				/searchEstimateInContractAvailable.do=contractController
+				/addNewContract.do=contractController
+				/cancleEstimate.do=contractController
+				/searchContract.do=contractController
+				/searchContractDetail.do=contractController
+				/searchDeliveryList.do=deliveryController
+				/batchDeliveryPlanListProcess.do=deliveryController
+				/searchSalesPlan.do=salesPlanController
+				/batchSalesPlanListProcess.do=salesPlanController
+				/searchDeliverableContractList.do=deliveryController
+				/deliver.do=deliveryController
+				/searchDeliveryInfoList.do=deliveryController
+			</value>
+		</property>
+	</bean>
+
+	
+
+	<bean id="estimateController"
+		class="com.estimulo.logistics.sales.controller.EstimateController"
+		p:cacheSeconds="0" 
+		p:salesServiceFacade-ref="salesServiceFacade"
+		p:methodNameResolver-ref="parameterMethodNameResolver" />
+
+	<bean id="contractController"
+		class="com.estimulo.logistics.sales.controller.ContractController"
+		p:cacheSeconds="0" 
+		p:salesServiceFacade-ref="salesServiceFacade"
+		p:methodNameResolver-ref="parameterMethodNameResolver" />
+		
+	<bean id="deliveryController"
+		class="com.estimulo.logistics.sales.controller.DeliveryController"
+		p:cacheSeconds="0" 
+		p:salesServiceFacade-ref="salesServiceFacade"
+		p:methodNameResolver-ref="parameterMethodNameResolver" />
+
+	<bean id="salesPlanController"
+		class="com.estimulo.logistics.sales.controller.SalesPlanController"
+		p:cacheSeconds="0" p:salesServiceFacade-ref="salesServiceFacade"
+		p:methodNameResolver-ref="parameterMethodNameResolver" />
+</beans>

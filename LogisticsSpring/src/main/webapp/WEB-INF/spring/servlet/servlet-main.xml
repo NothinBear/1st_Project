@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:p="http://www.springframework.org/schema/p"
+   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+   <bean id="viewResolver"
+      class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+      <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+      <property name="prefix" value="/WEB-INF/views/" />
+      <property name="suffix" value=".jsp" />
+   </bean>
+
+   <bean id="simpleUrlHandlerMapping"
+      class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+      <property name="order" value="1" />
+      <property name="alwaysUseFullPath" value="false" />
+      <property name="interceptors"> 
+			<list> 
+				<ref bean="loggerInterceptor"/> 
+			</list> 
+		</property> 
+      <property name="mappings">
+         <value>
+            /hello1.html=urlFilenameViewController
+            /hello2.html=urlFilenameViewController
+            /hello3.html=urlFilenameViewController
+            /loginForm.html=urlFilenameViewController
+            /login.do=memberLogInController
+            /logout.do=memberLogoutController
+            /accessDenied.html=showErrorPageController
+			/select.html=urlFilenameViewController
+			/insert.html=urlFilenameViewController
+			/movie.html=urlFilenameViewController
+         </value>
+      </property>
+   </bean>
+   
+   
+
+   <bean name="memberLogInController"
+      class="com.estimulo.system.authorityManager.controller.MemberLogInController"
+      p:cacheSeconds="0"
+      p:authorityManagerServiceFacade-ref="authorityManagerServiceFacade"
+      p:methodNameResolver-ref="parameterMethodNameResolver" />
+   
+   <bean name="memberLogoutController"
+      class="com.estimulo.system.authorityManager.controller.MemberLogoutController"
+      p:cacheSeconds="0"
+      p:methodNameResolver-ref="parameterMethodNameResolver" />
+
+   <bean name="showErrorPageController"
+      class="com.estimulo.system.authorityManager.controller.ShowErrorPageController"
+      p:cacheSeconds="0"
+      p:methodNameResolver-ref="parameterMethodNameResolver" />
+   
+<!--    <bean name="apiExplorer"
+        class="com.estimulo.base.controller.ApiExplorer"
+        p:cacheSeconds="0"
+        p:baseServiceFacade-ref="baseServiceFacade"
+        p:methodNameResolver-ref="parameterMethodNameResolver" /> -->
+</beans>

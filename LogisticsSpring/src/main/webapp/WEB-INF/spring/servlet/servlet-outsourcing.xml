@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+     
+      	 <!-- internalResourceViewResolver -->
+      <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/outsourcing/" />
+		<property name="suffix" value=".jsp" />
+		<property name="contentType" value="text/html; charset=UTF-8" />
+	 </bean>
+	 
+	 <bean id="simpleUrlHandlerMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+	 	<property name="order" value="1" />
+	 	<property name="alwaysUseFullPath" value="false"/>
+	 	<property name="interceptors"> 
+			<list> 
+				<ref bean="loggerInterceptor"/> 
+			</list> 
+		</property>
+	 	<property name="mappings">
+	 		<value>
+	 			/osInfo.html=urlFilenameViewController
+				/getOutSourcingList.do=outSourcingController
+	 		</value>
+	 	</property>
+	 </bean>
+	 	
+	 <bean id="outSourcingController"
+	 	class="com.estimulo.logistics.outsourcing.controller.OutSourcingController"
+	 	p:cacheSeconds="0"
+	 	p:outSourcingServiceFacade-ref="outSourcingServiceFacade"
+	 	p:methodNameResolver-ref="parameterMethodNameResolver"/>
+</beans>

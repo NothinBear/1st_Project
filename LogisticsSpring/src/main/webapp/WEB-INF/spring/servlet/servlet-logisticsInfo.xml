@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/logisticsInfo/" />
+		<property name="suffix" value=".jsp" />
+		<property name="contentType" value="text/html; charset=UTF-8" />
+	</bean>
+
+
+	<bean id="simpleUrlHandlerMapping"
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="order" value="1" />
+		<property name="alwaysUseFullPath" value="false" />
+		<property name="interceptors"> 
+			<list> 
+				<ref bean="loggerInterceptor"/> 
+			</list> 
+		</property> 
+		<property name="mappings">
+			<value>
+				/codeList.do=codeController
+				/codeInfo.html=urlFilenameViewController
+				/itemInfo.html=urlFilenameViewController
+				/itemGroupInfo.html=urlFilenameViewController
+				/wareHouseInfo.html=urlFilenameViewController
+				/searchItem.do=itemController
+				/batchItemListProcess.do=itemController
+				/warehouseInfo.do=warehouseController
+				/getStandardUnitPrice.do=itemController
+			</value>
+		</property>
+	</bean>
+
+	<bean name="itemController"
+		class="com.estimulo.logistics.logisticsInfo.controller.ItemController"
+		p:cacheSeconds="0"
+		p:logisticsInfoServiceFacade-ref="logisticsInfoServiceFacade"
+		p:methodNameResolver-ref="parameterMethodNameResolver" />
+
+	<bean name="warehouseController"
+		class="com.estimulo.logistics.logisticsInfo.controller.WarehouseController"
+		p:cacheSeconds="0"
+		p:logisticsInfoServiceFacade-ref="logisticsInfoServiceFacade"
+		p:methodNameResolver-ref="parameterMethodNameResolver" />
+
+	<bean id="codeController"
+		  class="com.estimulo.system.base.controller.CodeController"
+		  p:cacheSeconds="0"
+		  p:baseServiceFacade-ref="baseServiceFacade"
+		  p:methodNameResolver-ref="parameterMethodNameResolver" />
+
+</beans>

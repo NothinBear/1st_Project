@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQLMap 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+   
+<sqlMap namespace="contract">
+
+	<typeAlias alias="EstimateTO" type="com.estimulo.logistics.sales.to.EstimateTO"/>
+	
+	<resultMap class="EstimateTO" id="estimateResult" groupBy="estimateNo">
+		<result property="effectiveDate" column="EFFECTIVE_DATE"  />
+		<result property="estimateNo" column="ESTIMATE_NO"  />
+		<result property="estimateRequester" column="ESTIMATE_REQUESTER"  />
+		<result property="description" column="DESCRIPTION"  />
+		<result property="contractStatus" column="CONTRACT_STATUS"  />
+		<result property="customerCode" column="CUSTOMER_CODE"  />
+		<result property="personCodeInCharge" column="PERSON_CODE_IN_CHARGE"  />
+		<result property="estimateDate" column="ESTIMATE_DATE" />
+		<result property="customerName" column="CUSTOMER_CODE" />
+	</resultMap>
+	
+	<select id="selectEstimateListInContractAvailable" parameterClass="map" resultMap="estimateResult">
+		<![CDATA[
+			SELECT * 
+			FROM ESTIMATE a ,(SELECT CUSTOMER_CODE , CUSTOMER_NAME FROM CUSTOMER) b
+			WHERE CONTRACT_STATUS IS NULL
+			AND b.CUSTOMER_CODE = a.CUSTOMER_CODE
+			AND TO_DATE(EFFECTIVE_DATE,'YYYY-MM-DD') >= TO_DATE(SYSDATE,'YYYY-MM-DD')
+			AND TO_DATE(ESTIMATE_DATE, 'YYYY-MM-DD')
+			BETWEEN TO_DATE(#startDate#, 'YYYY-MM-DD') AND TO_DATE(#endDate#,'YYYY-MM-DD')
+	    ]]>
+	</select>
+	
+	<typeAlias alias="ContractInfoTO" type="com.estimulo.logistics.sales.to.ContractInfoTO"/>
+	
+	<resultMap class="ContractInfoTO" id="contractInfoResult">
+		<result property="contractNo" column="CONTRACT_NO"  />
+		<result property="estimateNo" column="ESTIMATE_NO"  />
+		<result property="contractType" column="CONTRACT_TYPE"  />
+		<result property="contractTypeName" column="CONTRACT_TYPE_NAME"  />
+		<result property="customerCode" column="CUSTOMER_CODE"  />
+		<result property="customerName" column="CUSTOMER_NAME"  />
+		<result property="estimateDate" column="ESTIMATE_DATE"  />
+		<result property="contractDate" column="CONTRACT_DATE"  />
+		<result property="contractRequester" column="CONTRACT_REQUESTER"  />
+		<result property="personCodeInCharge" column="PERSON_CODE_IN_CHARGE"  />
+		<result property="empNameInCharge" column="EMP_NAME_IN_CHARGE"  />
+		<result property="description" column="DESCRIPTION" />
+		<result property="deliveryCompletionStatus" column="DELIVERY_COMPLETION_STATUS"  />			
+	</resultMap>
+
+		<select id="selectContractList" parameterClass="map" resultMap="contractInfoResult">
+		
+				WITH CODE_DETAIL_LIST AS
+				( SELECT DETAIL_CODE, DETAIL_CODE_NAME FROM CODE_DETAIL ) ,
+				<isEqual property="searchCondition" compareValue="searchByCustomer" >
+				CONTRACT_LIST AS ( SELECT * FROM CONTRACT WHERE CUSTOMER_CODE = #customerCode# ) ,
+				</isEqual>
+				<isEqual property="searchCondition" compareValue="searchByDate" >
+				CONTRACT_LIST AS ( SELECT * FROM CONTRACT WHERE CONTRACT_DATE BETWEEN
+				TO_DATE(#startDate#,'YYYY-MM-DD') AND TO_DATE(#endDate#,'YYYY-MM-DD') ),
+				</isEqual>
+				ESTIMATE_LIST AS ( SELECT * FROM ESTIMATE )
+				SELECT T1.CONTRACT_NO
+				, T1.ESTIMATE_NO
+				, T1.CONTRACT_TYPE
+				, T2.DETAIL_CODE_NAME AS CONTRACT_TYPE_NAME
+				, T1.CUSTOMER_CODE
+				, T3.DETAIL_CODE_NAME AS CUSTOMER_NAME
+				, E.ESTIMATE_DATE
+				, T1.CONTRACT_DATE
+				, T1.CONTRACT_REQUESTER
+				, T1.PERSON_CODE_IN_CHARGE
+				, T4.DETAIL_CODE_NAME AS EMP_NAME_IN_CHARGE
+				, T1.DESCRIPTION 
+				<isEqual property="searchCondition" compareValue="searchByDate" >
+				, T1.DELIVERY_COMPLETION_STATUS 
+				</isEqual>
+				FROM CONTRACT_LIST T1 
+				, CODE_DETAIL_LIST T2 
+				, CODE_DETAIL_LIST T3
+				, CODE_DETAIL_LIST T4
+				, ESTIMATE_LIST E
+				WHERE T1.CONTRACT_TYPE = T2.DETAIL_CODE	
+				AND T1.CUSTOMER_CODE = T3.DETAIL_CODE
+				AND T1.PERSON_CODE_IN_CHARGE = T4.DETAIL_CODE 
+				AND T1.ESTIMATE_NO = E.ESTIMATE_NO
+				
+	</select>
+	
+	<select id="selectDeliverableContractList" parameterClass="map" resultMap="contractInfoResult">
+
+				WITH CODE_DETAIL_LIST AS 
+				( SELECT DETAIL_CODE, DETAIL_CODE_NAME FROM CODE_DETAIL ) ,
+				<isEqual property="searchCondition" compareValue="searchByCustomer" >
+				CONTRACT_LIST AS 
+				( SELECT * FROM CONTRACT WHERE CUSTOMER_CODE = #customerCode# ) ,
+				</isEqual>
+				<isEqual property="searchCondition" compareValue="searchByDate" >
+				CONTRACT_LIST AS ( SELECT * FROM CONTRACT WHERE CONTRACT_DATE BETWEEN
+				TO_DATE(#startDate#,'YYYY-MM-DD') AND TO_DATE(#endDate#,'YYYY-MM-DD') ),
+				</isEqual>
+				ESTIMATE_LIST AS 
+				( SELECT * FROM ESTIMATE )
+							  
+				SELECT 
+				T1.CONTRACT_NO,  
+				T1.ESTIMATE_NO,  
+				T1.CONTRACT_TYPE,  
+				T2.DETAIL_CODE_NAME AS CONTRACT_TYPE_NAME, 
+				T1.CUSTOMER_CODE,  
+				T3.DETAIL_CODE_NAME AS CUSTOMER_NAME, 
+				E.ESTIMATE_DATE, 
+				T1.CONTRACT_DATE, 
+				T1.CONTRACT_REQUESTER, 
+				T1.PERSON_CODE_IN_CHARGE, 
+				T4.DETAIL_CODE_NAME AS EMP_NAME_IN_CHARGE, 
+				T1.DESCRIPTION,
+				T1.DELIVERY_COMPLETION_STATUS 
+				FROM 
+				CONTRACT_LIST T1 , 
+				CODE_DETAIL_LIST T2 , 
+				CODE_DETAIL_LIST T3, 
+				CODE_DETAIL_LIST T4,  
+				ESTIMATE_LIST E 
+				WHERE 
+				T1.CONTRACT_TYPE = T2.DETAIL_CODE 
+				AND T1.CUSTOMER_CODE = T3.DETAIL_CODE 
+				AND T1.PERSON_CODE_IN_CHARGE = T4.DETAIL_CODE  
+				AND T1.ESTIMATE_NO = E.ESTIMATE_NO
+				AND T1.DELIVERY_COMPLETION_STATUS IS NULL
+				
+		</select>
+		
+		<select id="selectContractCount" resultClass="int">
+			SELECT CONTRACT_SEQ.NEXTVAL FROM DUAL
+		</select>
+		
+		<typeAlias alias="ContractTO" type="com.estimulo.logistics.sales.to.ContractTO"/>
+		
+		<insert id="insertContract" parameterClass="ContractTO">
+			INSERT INTO CONTRACT (CONTRACT_NO, ESTIMATE_NO, 
+				CONTRACT_TYPE, CUSTOMER_CODE, CONTRACT_DATE, 
+				CONTRACT_REQUESTER, PERSON_CODE_IN_CHARGE, DESCRIPTION) 
+				VALUES (#contractNo#, #estimateNo#, 
+						#contractType#, #customerCode#, 
+						#contractDate#, #contractRequester#, 
+						#personCodeInCharge#, #description#)
+		</insert>
+		
+		<update id="updateContract" parameterClass="ContractTO">
+			UPDATE CONTRACT SET ESTIMATE_NO = #estimateNo# , 
+				   CONTRACT_TYPE = #contractType# , 
+				   CUSTOMER_CODE = #customerCode# ,
+				   CONTRACT_DATE = #contractDate# , 
+				   CONTRACT_REQUESTER = #contractRequester# , 
+				   PERSON_CODE_IN_CHARGE = #personCodeInCharge# , 
+				   DESCRIPTION = #description# 
+				   WHERE CONTRACT_NO = #contractNo#
+		</update>
+	
+</sqlMap>

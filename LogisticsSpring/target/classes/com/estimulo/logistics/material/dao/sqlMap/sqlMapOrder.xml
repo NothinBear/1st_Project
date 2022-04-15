@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQLMap 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="order">
+
+	<typeAlias alias="OrderTempTO" type="com.estimulo.logistics.material.to.OrderTempTO"/>
+	
+	<resultMap class="OrderTempTO" id="orderTempResult">
+		<result property="mrpGatheringNo" column="MRP_GATHERING_NO"  />
+		<result property="itemCode" column="ITEM_CODE"  />
+		<result property="itemName" column="ITEM_NAME"  />
+		<result property="unitOfMrp" column="UNIT_OF_MRP"  />
+		<result property="requiredAmount" column="REQUIRED_AMOUNT"  />
+		<result property="stockAmount" column="STOCK_AMOUNT"  />
+		<result property="orderDate" column="ORDER_DATE"  />
+		<result property="requiredDate" column="REQUIRED_DATE" />			
+	</resultMap>
+	
+	<parameterMap class="map" id="getOrderListParameter">
+		<parameter property="startDate" javaType="java.lang.String" jdbcType="VARCHAR" mode="IN" />
+		<parameter property="endDate" javaType="java.lang.String" jdbcType="VARCHAR" mode="IN" />
+		<parameter property="ERROR_CODE" javaType="java.lang.Integer" jdbcType="DECIMAL" mode="OUT" />
+		<parameter property="ERROR_MSG" javaType="java.lang.String" jdbcType="VARCHAR" mode="OUT" />
+		<parameter property="RESULT" javaType="java.sql.ResultSet" jdbcType="ORACLECURSOR" mode="OUT" />
+	</parameterMap>
+	
+	<procedure id="getOrderList" parameterMap="getOrderListParameter" resultMap="orderTempResult">
+		<![CDATA[
+		{call P_ORDERLIST_OPEN(?,?,?,?,?)}
+		]]>
+	</procedure>
+	
+	<typeAlias alias="OrderDialogTempTO" type="com.estimulo.logistics.material.to.OrderDialogTempTO"/>
+	
+	<resultMap class="OrderDialogTempTO" id="orderDialogTempResult">			
+		<result property="itemCode" column="ITEM_CODE"  />
+		<result property="itemName" column="ITEM_NAME"  />
+		<result property="unitOfMrp" column="UNIT_OF_MRP"  />
+		<result property="requiredAmount" column="REQUIRED_AMOUNT"  />
+		<result property="stockAmount" column="STOCK_AMOUNT"  />  
+		<result property="calculatedRequiredAmount" column="CALCULATED_REQUIRED_AMOUNT"  />
+		<result property="standardUnitPrice" column="STANDARD_UNIT_PRICE"  />
+		<result property="sumPrice" column="SUM_PRICE" />	
+	</resultMap>
+	
+	<parameterMap class="map" id="getOrderDialogInfoParameter">
+		<parameter property="mrpNoList" javaType="java.lang.String" jdbcType="VARCHAR" mode="IN" />			
+		<parameter property="ERROR_CODE" javaType="java.lang.Integer" jdbcType="DECIMAL" mode="OUT" />
+		<parameter property="ERROR_MSG" javaType="java.lang.String" jdbcType="VARCHAR" mode="OUT" />
+		<parameter property="RESULT" javaType="java.sql.ResultSet" jdbcType="ORACLECURSOR" mode="OUT" />
+	</parameterMap>
+	
+	<procedure id="getOrderDialogInfo" parameterMap="getOrderDialogInfoParameter" resultMap="orderDialogTempResult">
+		<![CDATA[
+		{call P_ORDER_DIALOG_OPEN(?,?,?,?)}
+		]]>
+	</procedure>
+	
+	<parameterMap class="map" id="orderParameter">
+		<parameter property="mpsNoList" javaType="java.lang.String" jdbcType="VARCHAR" mode="IN" />			
+		<parameter property="ERROR_CODE" javaType="java.lang.Integer" jdbcType="DECIMAL" mode="OUT" />
+		<parameter property="ERROR_MSG" javaType="java.lang.String" jdbcType="VARCHAR" mode="OUT" />
+	</parameterMap>
+	
+	<procedure id="order" parameterMap="orderParameter">
+		<![CDATA[
+		{call P_ORDER(?,?,?)}
+		]]>
+	</procedure>
+	
+	<parameterMap class="map" id="optionOrderParameter">
+		<parameter property="itemCode" javaType="java.lang.String" jdbcType="VARCHAR" mode="IN" />
+		<parameter property="itemAmount" javaType="java.lang.String" jdbcType="VARCHAR" mode="IN" />				
+		<parameter property="ERROR_CODE" javaType="java.lang.Integer" jdbcType="DECIMAL" mode="OUT" />
+		<parameter property="ERROR_MSG" javaType="java.lang.String" jdbcType="VARCHAR" mode="OUT" />
+	</parameterMap>
+	
+	<procedure id="optionOrder" parameterMap="optionOrderParameter">
+		<![CDATA[
+		{call P_OPTION_ORDER(?,?,?,?)}
+		]]>
+	</procedure>
+	
+	<typeAlias alias="OrderInfoTO" type="com.estimulo.logistics.material.to.OrderInfoTO"/>
+	
+	<resultMap class="OrderInfoTO" id="orderInfoResult">			
+		<result property="orderNo" column="ORDER_NO"  />
+		<result property="orderDate" column="ORDER_DATE"  />
+		<result property="orderInfoStatus" column="ORDER_INFO_STATUS"  />
+		<result property="orderSort" column="ORDER_SORT"  />
+		<result property="itemCode" column="ITEM_CODE"  />  
+		<result property="itemName" column="ITEM_NAME"  />
+		<result property="orderAmount" column="ORDER_AMOUNT"  />
+		<result property="inspectionStatus" column="INSPECTION_STATUS"  />	
+	</resultMap>
+	
+	<select id="getOrderInfoListOnDelivery" resultMap="orderInfoResult">
+		select * from order_info where ORDER_INFO_STATUS = '운송중' OR ORDER_INFO_STATUS = '검사완료'
+	</select>
+	
+	<select id="getOrderInfoList" parameterClass="map" resultMap="orderInfoResult">
+		select * from order_info
+		where to_date(order_date,'YY-MM-DD') between to_date(#startDate#,'YY-MM-DD') AND to_date(#endDate#,'YY-MM-DD')
+	</select>		
+	
+	<parameterMap class="map" id="updateOrderInfoParameter">
+		<parameter property="orderNoList" javaType="java.lang.String" jdbcType="VARCHAR" mode="IN" />				
+		<parameter property="ERROR_CODE" javaType="java.lang.Integer" jdbcType="DECIMAL" mode="OUT" />
+		<parameter property="ERROR_MSG" javaType="java.lang.String" jdbcType="VARCHAR" mode="OUT" />
+	</parameterMap>
+	<procedure id="updateOrderInfo" parameterMap="updateOrderInfoParameter">
+		<![CDATA[
+		{call P_INSPECTION(?,?,?)}
+		]]>
+	</procedure>
+</sqlMap>

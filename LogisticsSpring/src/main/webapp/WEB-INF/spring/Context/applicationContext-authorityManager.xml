@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd">
+
+	<bean id="authorityGroupDAO"
+		class="com.estimulo.system.authorityManager.dao.AuthorityGroupDAOImpl"
+		parent="iBatisDaoSupport"/>
+	<bean id="menuAuthorityDAO"
+		class="com.estimulo.system.authorityManager.dao.MenuAuthorityDAOImpl"
+		parent="iBatisDaoSupport"/>
+	<bean id="menuDAO"
+		class="com.estimulo.system.authorityManager.dao.MenuDAOImpl"
+		parent="iBatisDaoSupport"/>
+	<bean id="userMenuDAO"
+		class="com.estimulo.system.authorityManager.dao.UserMenuDAOImpl"
+		 parent="iBatisDaoSupport"/>
+		
+	<bean id="empSearchDAO"
+		class="com.estimulo.hr.affair.dao.EmpSearchingDAOImpl"
+		 parent="iBatisDaoSupport"/>
+	<bean id="empSecretDAO"
+		class="com.estimulo.hr.affair.dao.EmployeeSecretDAOImpl"
+		 parent="iBatisDaoSupport"/>
+		
+	<bean id="authorityGroupApplicationService"
+		class="com.estimulo.system.authorityManager.applicationService.AuthorityGroupApplicationServiceImpl"
+		p:authorityGroupDAO-ref="authorityGroupDAO"
+		/>
+	<bean id="logInApplicationService"
+		class="com.estimulo.system.authorityManager.applicationService.LogInApplicationServiceImpl"
+		p:empSearchDAO-ref="empSearchDAO"
+		p:empSecretDAO-ref="empSecretDAO"
+		p:menuAuthorityDAO-ref="menuAuthorityDAO"
+		p:authorityGroupDAO-ref="authorityGroupDAO"/>
+	<bean id="menuApplicationService"
+		class="com.estimulo.system.authorityManager.applicationService.MenuApplicationServiceImpl"
+		p:menuDAO-ref="menuDAO"
+		p:menuAuthorityDAO-ref="menuAuthorityDAO"
+		/>
+	
+	<bean id="authorityManagerServiceFacade"
+		class="com.estimulo.system.authorityManager.serviceFacade.AuthorityManagerServiceFacadeImpl"
+		p:authorityGroupAS-ref="authorityGroupApplicationService"
+		p:menuAS-ref="menuApplicationService"
+		p:logInAS-ref="logInApplicationService"/>
+		
+</beans>

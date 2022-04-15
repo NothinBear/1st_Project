@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/basicInfo/" />
+		<property name="suffix" value=".jsp" />
+		<property name="contentType" value="text/html; charset=UTF-8"/>
+	</bean>
+
+	
+	<bean id="simpleUrlHandlerMapping"
+		  class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		  <property name="order" value="1"/>
+		  <property name="alwaysUseFullPath" value="false"/>
+		  <property name="interceptors"> 
+			<list> 
+				<ref bean="loggerInterceptor"/> 
+			</list> 
+		  </property> 
+		  <property name="mappings" >
+		  	<value>
+		  		/companyInfo.html=urlFilenameViewController
+				/workplaceInfo.html=urlFilenameViewController
+				/deptInfo.html=urlFilenameViewController
+				/clientInfo.html=urlFilenameViewController
+				/codeModal.html=urlFilenameViewController
+				/searchCompany.do=companyController
+				/batchCompanyListProcess.do=companyController
+				/searchWorkplace.do=workplaceController
+				/batchWorkplaceListProcess.do=workplaceController
+				/searchDepartment.do=departmentController
+				/batchDepartmentListProcess.do=departmentController
+				/searchCustomer.do=customerController
+				/batchCustomerListProcess.do=customerController
+				/searchFinancialAccountAssociatesList.do=financialAccountAssociatesController
+				/batchFinancialAccountAssociatesListProcess.do=financialAccountAssociatesController
+		  	</value>
+		  </property>
+	</bean>
+	
+	
+	
+	<bean id="companyController"
+		  class="com.estimulo.system.basicInfo.controller.CompanyController"
+		  p:cacheSeconds="0"
+		  p:basicInfoServiceFacade-ref="basicInfoServiceFacade"
+		  p:methodNameResolver-ref="parameterMethodNameResolver"/>
+		  
+	<bean id="customerController"
+		  class="com.estimulo.system.basicInfo.controller.CustomerController"
+		  p:cacheSeconds="0"
+		  p:basicInfoServiceFacade-ref="basicInfoServiceFacade"
+		  p:methodNameResolver-ref="parameterMethodNameResolver"/>
+		  
+	<bean id="departmentController" 
+		  class="com.estimulo.system.basicInfo.controller.DepartmentController"
+ 		  p:cacheSeconds="0"
+		  p:basicInfoServiceFacade-ref="basicInfoServiceFacade"
+		  p:methodNameResolver-ref="parameterMethodNameResolver"/>
+		  
+	<bean id="financialAccountAssociatesController" 
+	  	  class="com.estimulo.system.basicInfo.controller.FinancialAccountAssociatesController"
+ 		  p:cacheSeconds="0"
+		  p:basicInfoServiceFacade-ref="basicInfoServiceFacade"
+		  p:methodNameResolver-ref="parameterMethodNameResolver"/>
+		  
+	<bean id="workplaceController" 
+		  class="com.estimulo.system.basicInfo.controller.WorkplaceController"
+ 		  p:cacheSeconds="0"
+		  p:basicInfoServiceFacade-ref="basicInfoServiceFacade"
+		  p:methodNameResolver-ref="parameterMethodNameResolver"/>
+
+	
+</beans>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd">
+	
+	<!-- dao -->
+	<bean id="estimateDAO"
+		class="com.estimulo.logistics.sales.dao.EstimateDAOImpl"
+		parent="iBatisDaoSupport"/>
+	<bean id="estimateDetailDAO"
+		class="com.estimulo.logistics.sales.dao.EstimateDetailDAOImpl"
+		parent="iBatisDaoSupport"/>
+	<bean id="contractDAO"
+		class="com.estimulo.logistics.sales.dao.ContractDAOImpl"
+		parent="iBatisDaoSupport"/>
+	<bean id="contractDetailDAO"
+		class="com.estimulo.logistics.sales.dao.ContractDetailDAOImpl"
+		parent="iBatisDaoSupport"/>
+	<bean id="salesPlanDAO"
+		class="com.estimulo.logistics.sales.dao.SalesPlanDAOImpl"
+		parent="iBatisDaoSupport"/>
+	<bean id="deliveryDAO"
+		class="com.estimulo.logistics.sales.dao.DeliveryDAOImpl"
+		parent="iBatisDaoSupport"/>
+	
+	<!-- applicationService -->
+	<bean id="estimateApplicationServiceI"
+		class="com.estimulo.logistics.sales.applicationService.EstimateApplicationServiceImpl"
+		p:estimateDAO-ref="estimateDAO"
+		p:estimateDetailDAO-ref="estimateDetailDAO"/>	
+	<bean id="contractApplicationService"
+		class="com.estimulo.logistics.sales.applicationService.ContractApplicationServiceImpl"
+		p:estimateDAO-ref="estimateDAO"
+		p:estimateDetailDAO-ref="estimateDetailDAO"
+		p:contractDAO-ref="contractDAO"
+		p:contractDetailDAO-ref="contractDetailDAO"/>	
+	<bean id="salesPlanApplicationService"
+		class="com.estimulo.logistics.sales.applicationService.SalesPlanApplicationServiceImpl"
+		p:salesPlanDAO-ref="salesPlanDAO"/>
+	<bean id="deliveryApplicationService"
+		class="com.estimulo.logistics.sales.applicationService.DeliveryApplicationServiceImpl"
+		p:deliveryDAO-ref="deliveryDAO"/>
+	
+		<!-- serviceFacade -->
+	<bean id="salesServiceFacade"
+		class="com.estimulo.logistics.sales.serviceFacade.SalesServiceFacadeImpl"
+		p:estimateApplicationService-ref="estimateApplicationServiceI"
+		p:contractApplicationService-ref="contractApplicationService"
+		p:salesPlanApplicationService-ref="salesPlanApplicationService"
+		p:deliveryApplicationService-ref="deliveryApplicationService"/>
+		
+</beans>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd">
+	
+       
+	<aop:config>
+
+		<aop:pointcut id="loggingAdvice" expression="execution(* com..serviceFacade.*.*(..) ) or
+													  execution(* com..applicationService.*.*(..) ) or 
+													  execution(* com..dao.*.*(..) )" />
+		
+		<aop:pointcut id="dataAccessExceptionAdvice" expression="execution(* com..serviceFacade.*.*(..) )" />
+		
+		<aop:pointcut id="transactionAdviceAdvice" expression="execution(* com..serviceFacade.*.*(..) ) " />
+		
+		<aop:advisor advice-ref="logging" pointcut-ref="loggingAdvice"/>
+		<aop:advisor advice-ref="dataAccessException" pointcut-ref="dataAccessExceptionAdvice"/>
+
+	</aop:config>
+
+		<bean id="logging" class="com.estimulo.system.common.aspect.LoggingAdvice" />
+		<bean id="dataAccessException" class="com.estimulo.system.common.aspect.DataAccessExceptionThrowsAdvice" />
+	
+ 		<tx:advice id="transactionAdvice" transaction-manager="transactionManager">
+			<tx:attributes>
+				<tx:method name="get*" read-only="true"/>
+				<tx:method name="check*" read-only="true"/>
+				<tx:method name="find*" read-only="true"/>
+				<tx:method name="search*" read-only="true"/>
+				<tx:method name="workSiteLogList" read-only="true"/>
+				<tx:method name="accessToAuthority" read-only="true"/>
+				<tx:method name="batch*"/>
+				<tx:method name="change*"/>
+				<tx:method name="convert*"/>
+				<tx:method name="open*"/>
+				<tx:method name="register*"/>
+				<tx:method name="workOrder*"/>
+				<tx:method name="show*"/>
+				<tx:method name="add*"/>
+				<tx:method name="insert*"/>
+				<tx:method name="order"/>
+				<tx:method name="optionOrder"/>
+				<tx:method name="warehousing"/>
+				<tx:method name="workCompletion"/>
+				<tx:method name="deliver"/>
+			</tx:attributes>
+		</tx:advice>
+</beans>

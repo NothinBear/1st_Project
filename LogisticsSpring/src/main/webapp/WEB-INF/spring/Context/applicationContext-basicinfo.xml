@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd">
+	
+	<!-- dao -->
+	<!-- applicationService -->
+	<!-- serviceFacade -->
+	<bean id="codeDetailDAO"
+		class="com.estimulo.system.base.dao.CodeDetailDAOImpl"
+		parent="iBatisDaoSupport"/>
+	<bean id="companyDAO"
+		class="com.estimulo.system.basicInfo.dao.CompanyDAOImpl"
+		  parent="iBatisDaoSupport"/>
+	<bean id="customerDAO"
+		class="com.estimulo.system.basicInfo.dao.CustomerDAOImpl"
+		  parent="iBatisDaoSupport"/>
+	<bean id="deptmentDAO"
+		class="com.estimulo.system.basicInfo.dao.DepartmentDAOImpl"
+		  parent="iBatisDaoSupport"/>
+	<bean id="financialAccountAssociatesDAO"
+		class="com.estimulo.system.basicInfo.dao.FinancialAccountAssociatesDAOImpl"
+		  parent="iBatisDaoSupport"/>
+	<bean id="workplaceDAO"
+		class="com.estimulo.system.basicInfo.dao.WorkplaceDAOImpl"
+		  parent="iBatisDaoSupport"/>
+	
+	<bean id="companyApplicationService"
+		class="com.estimulo.system.basicInfo.applicationService.CompanyApplicationServiceImpl"
+		p:companyDAO-ref="companyDAO" 
+		p:codeDetailDAO-ref="codeDetailDAO"/>
+	<bean id="customerApplicationService"
+		class="com.estimulo.system.basicInfo.applicationService.CustomerApplicationServiceImpl"
+		p:customerDAO-ref="customerDAO" 
+		p:codeDetailDAO-ref="codeDetailDAO" />
+	<bean id="departmentApplicationService"
+		class="com.estimulo.system.basicInfo.applicationService.DepartmentApplicationServiceImpl" 
+		p:departmentDAO-ref="deptmentDAO"
+		p:codeDetailDAO-ref="codeDetailDAO"/>
+	<bean id="financialAccountAssociatesApplicationService"
+		class="com.estimulo.system.basicInfo.applicationService.FinancialAccountAssociatesApplicationServiceImpl" 
+		p:financialAccountAssociatesDAO-ref="financialAccountAssociatesDAO"
+		p:codeDetailDAO-ref="codeDetailDAO"/>
+	<bean id="workplaceApplicationService"
+		class="com.estimulo.system.basicInfo.applicationService.WorkplaceApplicationServiceImpl" 
+		p:workplaceDAO-ref="workplaceDAO"
+		p:codeDetailDAO-ref="codeDetailDAO"/>
+	
+	<bean id="basicInfoServiceFacade"
+		class="com.estimulo.system.basicInfo.serviceFacade.BasicInfoServiceFacadeImpl"
+		  p:companyApplicationService-ref="companyApplicationService"
+		  p:customerApplicationService-ref="customerApplicationService"
+		  p:departmentApplicationService-ref="departmentApplicationService"
+		  p:financialAccountAssociatesApplicationService-ref="financialAccountAssociatesApplicationService"
+		  p:workplaceApplicationService-ref="workplaceApplicationService"
+		  />
+</beans>

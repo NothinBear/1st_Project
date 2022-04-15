@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd">
+	
+      <bean id="viewResolver" 
+      class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/production/" />
+		<property name="suffix" value=".jsp" />
+		<property name="contentType" value="text/html; charset=UTF-8" />
+	 </bean>
+	 <bean id="simpleUrlHandlerMapping"
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="order" value="1" />
+		<property name="alwaysUseFullPath" value="false" />
+		<property name="interceptors"> 
+			<list> 
+				<ref bean="loggerInterceptor"/> 
+			</list> 
+		</property>
+		<property name="mappings">
+			<value>
+			/mpsRegister.html=urlFilenameViewController
+			/mrpRegisterAndGather.html=urlFilenameViewController
+			/mrpInfo.html=urlFilenameViewController
+			/workInstruction.html=urlFilenameViewController
+			/manufactureManagement.html=urlFilenameViewController
+			/workSite.html=urlFilenameViewController
+			/searchMpsInfo.do=mpsController
+			/searchContractDetailInMpsAvailable.do=mpsController
+			/searchSalesPlanInMpsAvailable.do=mpsController
+			/convertContractDetailToMps.do=mpsController
+			/convertSalesPlanToMps.do=mpsController
+			/getMrpList.do=mrpController
+			/openMrp.do=mrpController
+			/registerMrp.do=mrpController
+			/getMrpGatheringList.do=mrpController
+			/registerMrpGathering.do=mrpController
+			/searchMrpGathering.do=mrpController
+			/getWorkOrderableMrpList.do=workOrderController
+			/showWorkOrderDialog.do=workOrderController
+			/workOrder.do=workOrderController
+			/showWorkOrderInfoList.do=workOrderController
+			/workOrderCompletion.do=workOrderController
+			/getProductionPerformanceInfoList.do=workOrderController
+			/showWorkSiteSituation.do=workOrderController
+			/showWorkSiteList.do=workOrderController
+			/workCompletion.do=workOrderController
+			/workSiteLog.do=workOrderController
+			</value>
+		</property>
+	</bean>
+	
+	 
+	 <bean id="mpsController"
+	 	class="com.estimulo.logistics.production.controller.MpsController"
+	 	p:cacheSeconds="0"
+	 	p:productionServiceFacade-ref="productionServiceFacade"
+	 	p:methodNameResolver-ref="parameterMethodNameResolver"/>
+	 	
+	 <bean id="mrpController"
+	 	class="com.estimulo.logistics.production.controller.MrpController"
+		p:cacheSeconds="0"
+		p:productionServiceFacade-ref="productionServiceFacade"
+		p:methodNameResolver-ref="parameterMethodNameResolver"/>
+		
+	 <bean id="workOrderController"
+	 	class="com.estimulo.logistics.production.controller.WorkOrderController"
+	 	p:cacheSeconds="0"
+	 	p:productionServiceFacade-ref="productionServiceFacade"
+	 	p:methodNameResolver-ref="parameterMethodNameResolver"/>
+</beans>

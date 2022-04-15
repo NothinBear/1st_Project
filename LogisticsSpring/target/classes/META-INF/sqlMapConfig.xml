@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+<sqlMapConfig>
+	<settings
+		cacheModelsEnabled="true"
+		enhancementEnabled="true"
+		lazyLoadingEnabled="true"
+		maxRequests="128"
+		maxSessions="32"
+		maxTransactions="16"
+		useStatementNamespaces="true"/>
+	<!-- http://gnujava.com/board/article_view.jsp?article_no=7038&menu_cd=57&idx_notice=NOTICE_FLAG+DESC%2C&board_no=36 -->
+	<!-- dtd해석버그 -->
+    <sqlMap resource="META-INF/dummy/sqlMapDummy.xml"/>
+    <!-- <sqlMap resource="kr/co/seoulit/hr/affair/dao/sqlMap/sqlMapEmployeeBasic.xml"/>
+    <sqlMap resource="kr/co/seoulit/hr/affair/dao/sqlMap/sqlMapEmployeeDetail.xml"/>
+    <sqlMap resource="kr/co/seoulit/hr/affair/dao/sqlMap/sqlMapEmployeeSecret.xml"/>
+    <sqlMap resource="kr/co/seoulit/hr/affair/dao/sqlMap/sqlMapEmpSearching.xml"/> -->
+</sqlMapConfig>

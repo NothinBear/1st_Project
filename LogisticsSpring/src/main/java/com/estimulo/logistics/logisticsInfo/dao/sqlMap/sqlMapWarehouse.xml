@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQLMap 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="warehouse">
+    
+    <typeAlias alias="WarehouseTO" type="com.estimulo.logistics.logisticsInfo.to.WarehouseTO" />
+     
+    <resultMap class="WarehouseTO" id="warehouseResult">     		
+		<result property="warehouseCode" column="WAREHOUSE_CODE" />
+		<result property="warehouseName" column="WAREHOUSE_NAME" />
+		<result property="warehouseUseOrNot" column="WAREHOUSE_USE_OR_NOT" />
+		<result property="description" column="DESCRIPTION" />			
+	</resultMap>
+	
+	<select id="selectWarehouseList" resultMap="warehouseResult">
+		SELECT * FROM WAREHOUSE
+	</select>
+</sqlMap>

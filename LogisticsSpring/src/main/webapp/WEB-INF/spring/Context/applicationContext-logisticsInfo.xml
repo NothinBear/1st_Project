@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd">
+	
+	<bean id="itemDAO"
+		class="com.estimulo.logistics.logisticsInfo.dao.ItemDAOImpl"
+		parent="iBatisDaoSupport"/>
+		
+	<bean id="warehouseDAO"
+		class="com.estimulo.logistics.logisticsInfo.dao.WarehouseDAOImpl" 
+		parent="iBatisDaoSupport"/>
+		
+	<bean id="itemApplicationService"
+		class="com.estimulo.logistics.logisticsInfo.applicationService.ItemApplicationServiceImpl"
+		p:itemDAO-ref="itemDAO"
+		p:codeDetailDAO-ref="codeDetailDAO"
+		p:bomDAO-ref="bomDAO"/>
+		
+	<bean id="warehouseApplicationService"
+		class="com.estimulo.logistics.logisticsInfo.applicationService.WarehouseApplicationServiceImpl"
+		p:warehouseDAO-ref="warehouseDAO"/>
+		
+	<bean id="logisticsInfoServiceFacade"
+		class="com.estimulo.logistics.logisticsInfo.serviceFacade.LogisticsInfoServiceFacadeImpl"
+		p:itemApplicationService-ref="itemApplicationService"
+		p:warehouseApplicationService-ref="warehouseApplicationService"/>
+</beans>

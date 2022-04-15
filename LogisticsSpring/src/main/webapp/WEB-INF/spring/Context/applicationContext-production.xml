@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd">
+	
+	<bean id="mpsDAO"
+		class="com.estimulo.logistics.production.dao.MpsDAOImpl"
+		parent="iBatisDaoSupport" />
+	<bean id="mrpDAO"
+		class="com.estimulo.logistics.production.dao.MrpDAOImpl"
+		 parent="iBatisDaoSupport"/>
+	<bean id="mrpGatheringDAO"
+		class="com.estimulo.logistics.production.dao.MrpGatheringDAOImpl"
+		parent="iBatisDaoSupport"/>
+	<bean id="workOrderDAO"
+		class="com.estimulo.logistics.production.dao.WorkOrderDAOImpl"
+		parent="iBatisDaoSupport"/>
+	
+	<bean id="mpsApplicationService"
+		class="com.estimulo.logistics.production.applicationService.MpsApplicationServiceImpl"
+		p:mpsDAO-ref="mpsDAO"
+		p:contractDetailDAO-ref="contractDetailDAO"
+		p:salesPlanDAO-ref="salesPlanDAO"/>
+	
+	<bean id="mrpApplicationService"
+		class="com.estimulo.logistics.production.applicationService.MrpApplicationServiceImpl" 
+		p:mpsDAO-ref="mpsDAO"
+		p:mrpDAO-ref="mrpDAO"
+		p:mrpGatheringDAO-ref="mrpGatheringDAO"/>
+		
+	<bean id="workOrderApplicationService"
+		class="com.estimulo.logistics.production.applicationService.WorkOrderApplicationServiceImpl" 
+		p:workOrderDAO-ref="workOrderDAO"
+		/>
+
+	<bean id="productionServiceFacade"
+		class="com.estimulo.logistics.production.serviceFacade.ProductionServiceFacadeImpl" 
+		p:mpsApplicationService-ref="mpsApplicationService"
+		p:mrpApplicationService-ref="mrpApplicationService"
+		p:workOrderApplicationService-ref="workOrderApplicationService"/>
+</beans>

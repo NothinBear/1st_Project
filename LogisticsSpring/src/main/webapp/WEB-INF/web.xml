@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+	
+  <display-name>estimulo</display-name>
+  <welcome-file-list>
+    <welcome-file>/WEB-INF/views/loginForm.jsp</welcome-file>
+  </welcome-file-list>
+  
+    <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>/WEB-INF/spring/Context/*</param-value>
+  </context-param>
+  
+    <filter>
+        <filter-name>sitemesh</filter-name>
+        <filter-class>com.opensymphony.sitemesh.webapp.SiteMeshFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>sitemesh</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+  <servlet>
+    <servlet-name>main</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>/WEB-INF/spring/servlet/servlet-main.xml</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>main</servlet-name>
+    <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>main</servlet-name>
+    <url-pattern>*.html</url-pattern>
+  </servlet-mapping>
+  
+  <!-- 자식 컨테이너 -->
+  <servlet>
+    <servlet-name>logisticsInfo</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>
+			/WEB-INF/spring/servlet/servlet-logisticsInfo.xml
+      </param-value>
+    </init-param>
+    <load-on-startup>2</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>logisticsInfo</servlet-name>
+    <url-pattern>/logisticsInfo/*</url-pattern>
+  </servlet-mapping>
+  <!-- base와 logisticsInfo 분리해야됨 -->
+  <servlet>
+    <servlet-name>base</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>
+        /WEB-INF/spring/servlet/servlet-base.xml
+      </param-value>
+    </init-param>
+    <load-on-startup>10</load-on-startup>
+  </servlet>
+    <servlet-mapping>
+    <servlet-name>base</servlet-name>
+    <url-pattern>/base/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+      <servlet-name>hr</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>/WEB-INF/spring/servlet/servlet-hr.xml</param-value>
+    </init-param>
+    <load-on-startup>3</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>hr</servlet-name>
+    <url-pattern>/hr/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>basicInfo</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>/WEB-INF/spring/servlet/servlet-basicInfo.xml</param-value>
+    </init-param>
+    <load-on-startup>4</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>basicInfo</servlet-name>
+    <url-pattern>/basicInfo/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>sales</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>/WEB-INF/spring/servlet/servlet-sales.xml</param-value>
+    </init-param>
+    <load-on-startup>5</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>sales</servlet-name>
+    <url-pattern>/sales/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+      <servlet-name>material</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>/WEB-INF/spring/servlet/servlet-material.xml</param-value>
+    </init-param>
+    <load-on-startup>6</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>material</servlet-name>
+    <url-pattern>/material/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>production</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>/WEB-INF/spring/servlet/servlet-production.xml</param-value>
+    </init-param>
+    <load-on-startup>7</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>production</servlet-name>
+    <url-pattern>/production/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>authority</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>/WEB-INF/spring/servlet/servlet-authorityManager.xml</param-value>
+    </init-param>
+    <load-on-startup>8</load-on-startup>
+  </servlet>  
+  <servlet-mapping>
+    <servlet-name>authority</servlet-name>
+    <url-pattern>/authorityManager/*</url-pattern>
+  </servlet-mapping>
+
+  	<servlet>
+    <servlet-name>outsourcing</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>/WEB-INF/spring/servlet/servlet-outsourcing.xml</param-value>
+    </init-param>
+    <load-on-startup>9</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>outsourcing</servlet-name>
+    <url-pattern>/outsourcing/*</url-pattern>
+  </servlet-mapping>
+  
+	<context-param>
+        <param-name>log4jConfigLocation</param-name>
+        <param-value>classpath:log4j.xml</param-value>
+    </context-param>
+ 
+    <listener>
+        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+    </listener>
+
+  <session-config>
+        <session-timeout>3600</session-timeout> 
+    </session-config>
+</web-app>
