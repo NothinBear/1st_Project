@@ -1,8 +1,0 @@
-
-Apach 연동, 서버와 분리
-
-Spring -> Spring boot 
-
-ibatis -> mybatis
-
-
