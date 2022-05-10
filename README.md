@@ -1,1 +1,1 @@
-# 1st_Project-JSP-JAVA-
+# 브런치에 프로젝트별로 있습니다.
