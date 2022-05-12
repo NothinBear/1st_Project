@@ -9,3 +9,5 @@ JSP와 AG_GRID등을 이용하여 기본적인 WEB사이트의 구성을 하였�
 MVC패턴을 구현하였고 트랜잭션 구현과 Thread동기화 문제는 Threadlocal을 이용하였습니다.
 
 실제와 유사하게 물류의 견적 / 수주 / MPS / MRP / BOM / 창고 / 작업관리 / 작업장 / 납품 등의 프로세스를 구현하였습니다.
+
+Apache Tomcat 9.0 , java 1.8 로 작업하였습니다.
